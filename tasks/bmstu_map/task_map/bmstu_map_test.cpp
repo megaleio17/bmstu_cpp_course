@@ -349,3 +349,19 @@ TEST(MapTest, RangeBasedForDemo)
 	EXPECT_EQ(catalog.size(), 5);
 	EXPECT_EQ(catalog["apple"], "fruit");
 }
+
+/// getCountOfLetters
+/// напишите функцию которая подсчитывает количество символов в строке и возвращет результат
+
+bmstu::map
+
+TEST(MapTest, DummyTest)
+{
+  // auto result = getCountOfLetters("abobaabobaboboboba");
+  auto result = getCountOfLetters(" 12312zzzzz3123123c");
+  ASSERT_EQ(result['1'], 4);
+  ASSERT_EQ(result['2'], 4);
+  ASSERT_EQ(result['c'], 1);
+  ASSERT_EQ(result[' '], 1);
+  ASSERT_EQ(result['z'], 5);
+}
