@@ -1,7 +1,7 @@
 // Copyright 2025 <ShuranovArtem>
-#include "base_algo_let.h"
 #include <algorithm>
 #include <numeric>
+#include "base_algo_let.h"
 
 std::vector<int> positive_numbers(const std::vector<int>& v)
 {

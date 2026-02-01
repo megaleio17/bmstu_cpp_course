@@ -350,18 +350,49 @@ TEST(MapTest, RangeBasedForDemo)
 	EXPECT_EQ(catalog["apple"], "fruit");
 }
 
-/// getCountOfLetters
-/// напишите функцию которая подсчитывает количество символов в строке и возвращет результат
+TEST(MapTest, RangeBasedForDemo2)
+{
+	bmstu::map<std::string, std::string> catalog;
 
-bmstu::map
+	catalog["watermelon"] = "fruit";
+	catalog["potato"] = "vegetable";
+	catalog["tomato"] = "vegetable";
+	catalog["apple"] = "fruit";
+	catalog["cherry"] = "berry";
+
+	std::cout << "\n=== Product Catalog (sorted by name) ===\n";
+	for (const auto& [product, category] : catalog)
+	{
+		std::cout << "  " << product << " -> " << category << "\n";
+	}
+	std::cout << "=========================================\n";
+
+	bmstu::map<std::string, std::string>::iterator it = catalog.begin();
+	std::cout << it->first << " " << it->second << std::endl;
+	++it;
+	std::cout << it->first << " " << it->second << std::endl;
+	--it;
+	std::cout << it->first << " " << it->second << std::endl;
+}
+
+/// getCountOfLetters
+/// напишите функцию которая подсчитывает количество символов в строке и
+/// возвращет результат
 
 TEST(MapTest, DummyTest)
 {
-  // auto result = getCountOfLetters("abobaabobaboboboba");
-  auto result = getCountOfLetters(" 12312zzzzz3123123c");
-  ASSERT_EQ(result['1'], 4);
-  ASSERT_EQ(result['2'], 4);
-  ASSERT_EQ(result['c'], 1);
-  ASSERT_EQ(result[' '], 1);
-  ASSERT_EQ(result['z'], 5);
+	auto result = getCountOfLetters(" 12312zzzzz3123123c");
+	ASSERT_EQ(result['1'], 4);
+	ASSERT_EQ(result['2'], 4);
+	ASSERT_EQ(result['c'], 1);
+	ASSERT_EQ(result[' '], 1);
+	ASSERT_EQ(result['z'], 5);
+}
+
+TEST(MapTest, DummyTest2)
+{
+	bmstu::map<std::string, int> result = getCountOfWords(
+		"I Have a Pen i Have pineapple, hmm apple pen. Wow apple pen");
+	ASSERT_EQ(result["pen"], 3);
+	ASSERT_EQ(result["apple"], 2);
 }

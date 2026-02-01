@@ -1,6 +1,6 @@
-#include "int2str.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include "int2str.h"
 #define int_MIN (-2147483647 - 1)
 #define int_MAX 2147483647
 char* int2str(int number)

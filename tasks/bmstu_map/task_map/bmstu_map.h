@@ -339,7 +339,7 @@ class map
 	{
 		tree_node<K, V>* current_;
 		std::stack<tree_node<K, V>*> stack_;
-		tree_node<K, V>* root_; // добавлено для поддержки operator--
+		tree_node<K, V>* root_;	 // добавил для поддержки operator--
 		mutable typename iterator::value_type pair_cache_;
 
 		iterator() : current_(nullptr), root_(nullptr), pair_cache_(K{}, V{}) {}
@@ -417,13 +417,13 @@ class map
 			return temp;
 		}
 
-		// ====== ИЗМЕНЕНО: корректная реализация operator-- ======
+		// реализация operator--
 		iterator& operator--() override
 		{
 			if (current_ == nullptr)
 			{
-				// --end(): идём к самому правому узлу
-				if (!root_) return *this;
+				if (!root_)
+					return *this;
 				std::stack<tree_node<K, V>*> temp_stack;
 				tree_node<K, V>* node = root_;
 				while (node)
@@ -432,17 +432,15 @@ class map
 					node = node->right;
 				}
 				current_ = temp_stack.top();
-				// stack_ не используется в --, но мы не трогаем его
 				return *this;
 			}
 
-			// Идём к предыдущему узлу: сначала влево, потом максимально вправо
 			if (current_->left)
 			{
 				tree_node<K, V>* node = current_->left;
 				while (node)
 				{
-					stack_.push(node); // можно не использовать, но для единообразия
+					stack_.push(node);
 					node = node->right;
 				}
 				current_ = stack_.top();
@@ -450,8 +448,6 @@ class map
 			}
 			else
 			{
-				// Нет левого поддерева: ищем предка, откуда пришли направо
-				// Для этого обойдём от корня
 				tree_node<K, V>* candidate = nullptr;
 				tree_node<K, V>* node = root_;
 				tree_node<K, V>* target = current_;
@@ -460,7 +456,7 @@ class map
 				{
 					if (target->key > node->key)
 					{
-						candidate = node; // запоминаем, когда идём вправо
+						candidate = node;
 						node = node->right;
 					}
 					else
@@ -479,34 +475,28 @@ class map
 			--(*this);
 			return temp;
 		}
-		// ====== КОНЕЦ ИЗМЕНЕНИЙ ======
 
-		// Остальные методы остаются как заглушки (как в оригинале)
 		iterator& operator+=(
 			const typename iterator::difference_type& n) override
 		{
-			// Не требуется для bidirectional_iterator
 			return *this;
 		}
 
 		iterator& operator-=(
 			const typename iterator::difference_type& n) override
 		{
-			// Не требуется для bidirectional_iterator
 			return *this;
 		}
 
 		iterator operator+(
 			const typename iterator::difference_type& n) const override
 		{
-			// Не требуется для bidirectional_iterator
 			return *this;
 		}
 
 		iterator operator-(
 			const typename iterator::difference_type& n) const override
 		{
-			// Не требуется для bidirectional_iterator
 			return *this;
 		}
 
@@ -525,7 +515,6 @@ class map
 		typename iterator::difference_type operator-(
 			const iterator& other) const override
 		{
-			// Не требуется точное вычисление для bidirectional_iterator
 			return 0;
 		}
 	};
@@ -583,18 +572,14 @@ class map
 		return node->value;
 	}
 
-	// Удаление
 	void erase(const K& key) { tree_.remove(key); }
 
-	// Проверка наличия ключа
 	bool contains(const K& key) const { return tree_.contains(key); }
 
-	// Размер и проверка на пустоту
 	size_t size() const { return tree_.size(); }
 
 	bool empty() const { return tree_.empty(); }
 
-	// Очистка
 	void clear()
 	{
 		tree_.~avl_balanced_tree();
@@ -605,7 +590,6 @@ class map
 
 	void inorder_print() { tree_.inorder_print(); }
 
-	// Итераторы
 	iterator begin() { return iterator(tree_.get_root(), false); }
 
 	iterator end() { return iterator(tree_.get_root(), true); }
@@ -615,3 +599,50 @@ class map
 };
 
 }  // namespace bmstu
+
+// 20 test на подсчёт символов
+bmstu::map<char, int> getCountOfLetters(const std::string& str)
+{
+	bmstu::map<char, int> freq_map;
+	for (char c : str)
+		freq_map[c]++;
+	return freq_map;
+}
+
+// 21 test на подсчёт слов
+bmstu::map<std::string, int> getCountOfWords(const std::string& input_text)
+{
+	bmstu::map<std::string, int> word_count;
+
+	std::string current_word = "";
+
+	for (int i = 0; i < static_cast<int>(input_text.size()); ++i)
+	{
+		char symbol = input_text[i];
+		if ((symbol >= 'a' && symbol <= 'z') ||
+			(symbol >= 'A' && symbol <= 'Z'))
+		{
+			if (symbol >= 'A' && symbol <= 'Z')
+			{
+				symbol = symbol - 'A' + 'a';
+			}
+
+			current_word += symbol;
+		}
+		else
+		{
+			if (current_word != "")
+			{
+				word_count[current_word] = word_count[current_word] + 1;
+				current_word = "";
+			}
+		}
+	}
+
+	if (current_word != "")
+	{
+		word_count[current_word] = word_count[current_word] + 1;
+	}
+
+	return word_count;
+}
